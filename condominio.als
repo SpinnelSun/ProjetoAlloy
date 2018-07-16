@@ -1,25 +1,18 @@
 module condominio
 
 sig Casa {
-	profissionais: set Profissional
+	profissionais: Profissional
 }
 
-abstract sig  Profissional {
+abstract sig  Profissional { }
 
-}
+sig Auxiliar extends Profissional { }
+sig Decorador extends Profissional { }
+sig Eletricista extends Profissional { }
+sig Fiscal extends Profissional { }
+sig Pedreiro extends Profissional { }
+sig Pintor extends Profissional { }
 
-sig Pedreiro, Pintor, Eletricista, Decorador, AuxServicosGerais, Fiscal extends Profissional {}
+pred show[ ] { }
 
-fact cardinalidade {
-	#Casa = 14
-    #Pedreiro = 9
-    #Pintor = 5
-	#Eletricista = 7
-	#Decorador = 3
-	#AuxServicosGerais = 10
-	#Fiscal = 13
-}
-
-pred show[]{}
-
-run show for 47
+run show for 14 Casa, 10 Auxiliar, 3 Decorador, 7 Eletricista, 13 Fiscal, 9 Pedreiro, 5 Pintor
