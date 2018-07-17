@@ -1,5 +1,7 @@
 module condominio
 
+-- Assinaturas
+
 sig Casa {
 	profissionais: set Profissional
 }
@@ -7,6 +9,8 @@ sig Casa {
 abstract sig Profissional { }
 
 sig Auxiliar, Decorador, Eletricista, Fiscal, Pedreiro, Pintor extends Profissional { }
+
+-- Fatos
 
 fact NumeroDeCasas {
 	#Casa = 14
@@ -45,6 +49,39 @@ fact semDecoracaoDurantePintura {
 	all d: Decorador | all p: Pintor | (d.~profissionais != p.~profissionais)
 }
 
+-- Predicados
+
 pred show[ ] { }
+
+-- Funções
+
+fun getAuxiliares [c: Casa] : set Auxiliar {
+    Auxiliar & c.profissionais
+}
+
+fun getDecoradores [c: Casa] : set Decorador {
+    Decorador & c.profissionais
+}
+
+fun getEletricistas [c: Casa] : set Eletricista {
+    Eletricista & c.profissionais
+}
+
+fun getFiscais [c: Casa] : set Fiscal {
+    Fiscal & c.profissionais
+}
+
+
+fun getPedreiros [c: Casa] : set Pedreiro {
+    Pedreiro & c.profissionais
+}
+
+fun getPintores [c: Casa] : set Pintor {
+    Pintor & c.profissionais
+}
+
+-- Assertions
+
+-- Checks & Run
 
 run show for 61
