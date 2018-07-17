@@ -53,6 +53,14 @@ fact semDecoracaoDurantePintura {
 	all d: Decorador | all p: Pintor | (d.~profissionais != p.~profissionais)
 }
 
+fact obraEletricaRequereAlvenaria{
+	all c: Casa | (#getEletricistas[c] > 0) => (#getPedreiros[c] > 0)
+}
+
+fact pinturaRequereLimpeza{
+	all c: Casa | (#getPintores[c] > 0) => (#getAuxiliares[c] > 0)
+}
+
 -- Predicados
 
 pred show[ ] { }
@@ -75,7 +83,6 @@ fun getFiscais [c: Casa] : set Fiscal {
     Fiscal & c.profissionais
 }
 
-
 fun getPedreiros [c: Casa] : set Pedreiro {
     Pedreiro & c.profissionais
 }
@@ -86,7 +93,18 @@ fun getPintores [c: Casa] : set Pintor {
 
 -- Assertions
 
+assert semLimpezaDuranteAlvenaria{
+	all c: Casa | (#getPedreiros[c] > 0) => (#getAuxiliares[c] = 0)
+}
+
+assert semLimpezaDuranteObraEletrica{
+	all c: Casa | (#getEletricistas[c] > 0) => (#getAuxiliares[c] = 0)
+}
+
 -- Checks
+check semLimpezaDuranteAlvenaria
+
+check semLimpezaDuranteObraEletrica
 
 -- Run
 
