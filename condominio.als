@@ -29,7 +29,7 @@ fact umaCasaPorVez {
 	all p: Profissional | one p.~profissionais
 }
 
-fact semAuxiliaresDemaisNumaCasa{
+fact semAuxiliaresDemaisNumaCasa {
 	all c: Casa | (#getAuxiliares[c] <= 2)
 }
 
@@ -53,15 +53,31 @@ fact semDecoracaoDurantePintura {
 	all d: Decorador | all p: Pintor | (d.~profissionais != p.~profissionais)
 }
 
-fact obraEletricaRequereAlvenaria{
-	all c: Casa | (#getEletricistas[c] > 0) => (#getPedreiros[c] > 0)
+fact distribuirAuxiliares {
+	all c: Casa | pinturaRequereLimpeza [c]
 }
 
-fact pinturaRequereLimpeza{
-	all c: Casa | (#getPintores[c] > 0) => (#getAuxiliares[c] > 0)
+fact distribuirFiscais {
+	all c: Casa | semFiscalizacaoDesnecessaria[c]
+}
+
+fact distribuirPedreiros {
+	all c: Casa | obraEletricaRequereAlvenaria [c]
 }
 
 -- Predicados
+
+pred obraEletricaRequereAlvenaria [c: Casa] {
+	(#getEletricistas[c] > 0) => (#getPedreiros[c] > 0)
+}
+
+pred pinturaRequereLimpeza [c: Casa] {
+	(#getPintores[c] > 0) => (#getAuxiliares[c] > 0)
+}
+
+pred semFiscalizacaoDesnecessaria [c: Casa] {
+	(#getFiscais[c] > 0) => (#getNaoFiscais[c] > 0)
+}
 
 pred show[ ] { }
 
@@ -91,19 +107,27 @@ fun getPintores [c: Casa] : set Pintor {
     Pintor & c.profissionais
 }
 
+fun getProfissionaisConstrucaoCivil [c: Casa] : set Profissional {
+	(Eletricista + Pedreiro + Pintor) & c.profissionais
+}
+
+fun getNaoFiscais [c: Casa] : set Pintor {
+    c.profissionais - Fiscal
+}
+
 -- Assertions
 
-assert semLimpezaDuranteAlvenaria{
+assert semLimpezaDuranteAlvenaria {
 	all c: Casa | (#getPedreiros[c] > 0) => (#getAuxiliares[c] = 0)
 }
 
-assert semLimpezaDuranteObraEletrica{
+assert semLimpezaDuranteObraEletrica {
 	all c: Casa | (#getEletricistas[c] > 0) => (#getAuxiliares[c] = 0)
 }
 
 -- Checks
-check semLimpezaDuranteAlvenaria
 
+check semLimpezaDuranteAlvenaria
 check semLimpezaDuranteObraEletrica
 
 -- Run
