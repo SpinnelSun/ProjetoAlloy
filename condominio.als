@@ -30,7 +30,7 @@ fact umaCasaPorVez {
 }
 
 fact semAuxiliaresDemaisNumaCasa{
-	all c: Casa | #getAuxiliares[c] <= 2
+	all c: Casa | (#getAuxiliares[c] <= 2)
 }
 
 fact semPinturaDuranteAlvenaria {
@@ -86,6 +86,8 @@ fun getPintores [c: Casa] : set Pintor {
 
 -- Assertions
 
--- Checks & Run
+-- Checks
+
+-- Run
 
 run show for 61
