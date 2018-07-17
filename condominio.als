@@ -29,6 +29,10 @@ fact umaCasaPorVez {
 	all p: Profissional | one p.~profissionais
 }
 
+fact semAuxiliaresDemaisNumaCasa{
+	all c: Casa | #getAuxiliares[c] <= 2
+}
+
 fact semPinturaDuranteAlvenaria {
 	all ptr: Pintor | all pdr: Pedreiro | (ptr.~profissionais != pdr.~profissionais)
 }
