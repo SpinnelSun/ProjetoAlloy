@@ -29,32 +29,13 @@ fact umaCasaPorVez {
 	all p: Profissional | one p.~profissionais
 }
 
-fact semAuxiliaresDemaisNumaCasa {
-	all c: Casa | (#getAuxiliares[c] <= 2)
-}
-
-fact semPinturaDuranteAlvenaria {
-	all ptr: Pintor | all pdr: Pedreiro | (ptr.~profissionais != pdr.~profissionais)
-}
-
-fact semPinturaDuranteObraEletrica {
-	all p: Pintor | all e: Eletricista | (p.~profissionais != e.~profissionais)
-}
-
-fact semDecoracaoDuranteAlvenaria {
-	all d: Decorador | all p: Pedreiro | (d.~profissionais != p.~profissionais)
-}
-
-fact semDecoracaoDuranteObraEletrica {
-	all d: Decorador | all e: Eletricista | (d.~profissionais != e.~profissionais)
-}
-
-fact semDecoracaoDurantePintura {
-	all d: Decorador | all p: Pintor | (d.~profissionais != p.~profissionais)
-}
-
 fact distribuirAuxiliares {
-	all c: Casa | pinturaRequereLimpeza [c]
+	all c: Casa | pinturaRequereLimpeza[c]
+	all c: Casa | semAuxiliaresDemaisPorCasa[c]
+}
+
+fact distribuirDecoradores {
+	all c: Casa | semDecoracaoDuranteConstrucaoCivil[c]
 }
 
 fact distribuirFiscais {
@@ -63,6 +44,11 @@ fact distribuirFiscais {
 
 fact distribuirPedreiros {
 	all c: Casa | obraEletricaRequereAlvenaria [c]
+}
+
+fact distribuirPintores {
+	all c: Casa | semPinturaDuranteAlvenaria[c]
+	all c: Casa | semPinturaDuranteObraEletrica[c]
 }
 
 -- Predicados
