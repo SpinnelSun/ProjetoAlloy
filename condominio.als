@@ -8,7 +8,10 @@ sig Casa {
 
 abstract sig Profissional { }
 
-sig Auxiliar, Decorador, Eletricista, Fiscal, Pedreiro, Pintor extends Profissional { }
+abstract sig EquipeExterna, EquipeInterna extends Profissional { }
+
+sig Auxiliar, Fiscal extends EquipeExterna { }
+sig Decorador, Eletricista, Pedreiro, Pintor extends EquipeInterna { }
 
 -- Fatos
 
@@ -95,6 +98,10 @@ fun getDecoradores [c: Casa] : set Decorador {
 
 fun getEletricistas [c: Casa] : set Eletricista {
     Eletricista & c.profissionais
+}
+
+fun getEquipeInterna [c: Casa] : set Eletricista {
+    EquipeInterna & c.profissionais
 }
 
 fun getFiscais [c: Casa] : set Fiscal {
