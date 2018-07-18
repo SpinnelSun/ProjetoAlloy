@@ -42,6 +42,7 @@ fact distribuirDecoradores {
 }
 
 fact distribuirFiscais {
+	all c: Casa | equipeInternaRequereFiscalizacao[c]
 	all c: Casa | semFiscalizacaoDesnecessaria[c]
 }
 
@@ -55,6 +56,10 @@ fact distribuirPintores {
 }
 
 -- Predicados
+
+pred equipeInternaRequereFiscalizacao [c: Casa] {
+	(#getEquipeInterna[c] > 0) => (#getFiscais[c] > 0)
+}
 
 pred obraEletricaRequereAlvenaria [c: Casa] {
 	(#getEletricistas[c] > 0) => (#getPedreiros[c] > 0)
@@ -73,7 +78,7 @@ pred semDecoracaoDuranteConstrucaoCivil [c: Casa] {
 }
 
 pred semFiscalizacaoDesnecessaria [c: Casa] {
-	(#getProfissionaisConstrucaoCivil[c] = 0) => (#getFiscais[c] = 0)
+	(#getEquipeInterna[c] = 0) => (#getFiscais[c] = 0)
 }
 
 pred semPinturaDuranteAlvenaria [c: Casa] {
@@ -84,7 +89,7 @@ pred semPinturaDuranteObraEletrica [c: Casa] {
 	(#getEletricistas[c] > 0) => (#getPintores[c] = 0)
 }
 
-pred show[ ] { }
+pred show [ ] { }
 
 -- Funções
 
