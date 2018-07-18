@@ -123,10 +123,15 @@ assert semLimpezaDuranteObraEletrica {
 	all c: Casa | (#getEletricistas[c] > 0) => (#getAuxiliares[c] = 0)
 }
 
+assert semProfissionaisOnipresentes {
+	all c1: Casa, c2:Casa, p: Profissional | ((c1 != c2 ) && (p in c1.profissionais)) => (p !in c2.profissionais)
+}
+
 -- Checks
 
 check semLimpezaDuranteAlvenaria
 check semLimpezaDuranteObraEletrica
+check semProfissionaisOnipresentes
 
 -- Run
 
