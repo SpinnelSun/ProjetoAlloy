@@ -68,15 +68,31 @@ fact distribuirPedreiros {
 -- Predicados
 
 pred obraEletricaRequereAlvenaria [c: Casa] {
-	(#getEletricistas[c] > 0) => (#getPedreiros[c] > 0)
+    (#getEletricistas[c] > 0) => (#getPedreiros[c] > 0)
 }
 
 pred pinturaRequereLimpeza [c: Casa] {
-	(#getPintores[c] > 0) => (#getAuxiliares[c] > 0)
+    (#getPintores[c] > 0) => (#getAuxiliares[c] > 0)
+}
+
+pred semAuxiliaresDemaisPorCasa [c: Casa] {
+    #getAuxiliares[c] <= 2
+}
+
+pred semDecoracaoDuranteConstrucaoCivil [c: Casa] {
+    (#getProfissionaisConstrucaoCivil[c] > 0) => (#getDecoradores[c] = 0)
 }
 
 pred semFiscalizacaoDesnecessaria [c: Casa] {
-	(#getFiscais[c] > 0) => (#getNaoFiscais[c] > 0)
+    (#getProfissionaisConstrucaoCivil[c] = 0) => (#getFiscais[c] = 0)
+}
+
+pred semPinturaDuranteAlvenaria [c: Casa] {
+    (#getPedreiros[c] > 0) => (#getPintores[c] = 0)
+}
+
+pred semPinturaDuranteObraEletrica [c: Casa] {
+    (#getEletricistas[c] > 0) => (#getPintores[c] = 0)
 }
 
 pred show[ ] { }
