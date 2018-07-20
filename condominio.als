@@ -139,11 +139,42 @@ assert semProfissionaisOnipresentes {
 	all c1: Casa, c2:Casa, p: Profissional | ((c1 != c2 ) && (p in c1.profissionais)) => (p !in c2.profissionais)
 }
 
+assert semPinturaDuranteAlvenaria {
+	all c: Casa | (#getPedreiros[c] > 0) => (#getPintores[c] = 0)
+}
+
+assert semPinturaDuranteObraEletrica {
+	all c: Casa | (#getEletricistas[c] > 0) => (#getPintores[c] = 0)
+}
+
+assert distribuicaoLimpeza {
+	all c: Casa | (#getAuxiliares[c] =< 2) 
+}
+
+assert pinturaRequereLimpeza {
+	all c: Casa | (#getPintores[c] > 0) => (#getAuxiliares[c] > 0)
+}
+
+assert obraEletricaRequereAlvenaria {
+	all c: Casa | (#getEletricistas[c] > 0) => (#getPedreiros[c] > 0)
+}
+
+assert semDecoracaoDuranteConstrucaoCivil {
+	all c: Casa | (#getProfissionaisConstrucaoCivil[c] > 0) => (#getDecoradores[c] = 0)
+}
+
+
 -- Checks
 
 check semLimpezaDuranteAlvenaria
 check semLimpezaDuranteObraEletrica
 check semProfissionaisOnipresentes
+check semPinturaDuranteAlvenaria
+check semPinturaDuranteObraEletrica
+check distribuicaoLimpeza
+check pinturaRequereLimpeza
+check obraEletricaRequereAlvenaria
+check semDecoracaoDuranteConstrucaoCivil
 
 -- Run
 
