@@ -1,5 +1,6 @@
 module condominio
 
+
 -- Assinaturas
 
 sig Casa {
@@ -12,6 +13,7 @@ abstract sig EquipeExterna, EquipeInterna extends Profissional { }
 
 sig Auxiliar, Fiscal extends EquipeExterna { }
 sig Decorador, Eletricista, Pedreiro, Pintor extends EquipeInterna { }
+
 
 -- Fatos
 
@@ -55,6 +57,7 @@ fact distribuirPintores {
 	all c: Casa | semPinturaDuranteObraEletrica[c]
 }
 
+
 -- Predicados
 
 pred equipeInternaRequereFiscalizacao [c: Casa] {
@@ -91,6 +94,7 @@ pred semPinturaDuranteObraEletrica [c: Casa] {
 
 pred show [ ] { }
 
+
 -- Funções
 
 fun getAuxiliares [c: Casa] : set Auxiliar {
@@ -125,57 +129,64 @@ fun getProfissionaisConstrucaoCivil [c: Casa] : set Profissional {
 	(Eletricista + Pedreiro + Pintor) & c.profissionais
 }
 
+
 -- Asserções
 
-assert semLimpezaDuranteAlvenaria {
-	all c: Casa | (#getPedreiros[c] > 0) => (#getAuxiliares[c] = 0)
-}
-
-assert semLimpezaDuranteObraEletrica {
-	all c: Casa | (#getEletricistas[c] > 0) => (#getAuxiliares[c] = 0)
-}
-
 assert semProfissionaisOnipresentes {
-	all c1: Casa, c2:Casa, p: Profissional | ((c1 != c2 ) && (p in c1.profissionais)) => (p !in c2.profissionais)
+	all c1: Casa, c2: Casa, p: Profissional | ((c1 != c2 ) && (p in c1.profissionais)) => (p !in c2.profissionais)
 }
 
-assert semPinturaDuranteAlvenaria {
-	all c: Casa | (#getPedreiros[c] > 0) => (#getPintores[c] = 0)
+assert maximoAuxiliaresPorCasa {
+	no c: Casa | (#getAuxiliares[c] > 2) 
 }
 
-assert semPinturaDuranteObraEletrica {
-	all c: Casa | (#getEletricistas[c] > 0) => (#getPintores[c] = 0)
+assert separarPedreirosPintores {
+	all pdr: Pedreiro | no ptr: Pintor | (pdr.~profissionais = ptr.~profissionais)
 }
 
-assert distribuicaoLimpeza {
-	all c: Casa | (#getAuxiliares[c] =< 2) 
+assert unirPintoresAuxiliares {
+	all p: Pintor | some a: Auxiliar | (p.~profissionais = a.~profissionais)
 }
 
-assert pinturaRequereLimpeza {
-	all c: Casa | (#getPintores[c] > 0) => (#getAuxiliares[c] > 0)
+assert separarEletricistasPintores {
+	all e: Eletricista | no p: Pintor | (e.~profissionais = p.~profissionais)
 }
 
-assert obraEletricaRequereAlvenaria {
-	all c: Casa | (#getEletricistas[c] > 0) => (#getPedreiros[c] > 0)
+assert unirEletricistasPedreiros {
+	all e: Eletricista | some p: Pedreiro | (e.~profissionais = p.~profissionais)
 }
 
-assert semDecoracaoDuranteConstrucaoCivil {
-	all c: Casa | (#getProfissionaisConstrucaoCivil[c] > 0) => (#getDecoradores[c] = 0)
+assert separarDecoradoresPedreiros {
+	all d: Decorador | no p: Pedreiro | (d.~profissionais = p.~profissionais)
+}
+
+assert separarDecoradoresPintores {
+	all d: Decorador | no p: Pintor | (d.~profissionais = p.~profissionais)
+}
+
+assert separarDecoradoresEletricistas {
+	all d: Decorador | no e: Eletricista | (d.~profissionais = e.~profissionais)
+}
+
+assert unirFiscaisEquipeInterna {
+	all c: Casa, f: Fiscal | (f in c.profissionais) => (#getEquipeInterna[c] > 0)
 }
 
 
--- Checks
+-- Checagens
 
-check semLimpezaDuranteAlvenaria
-check semLimpezaDuranteObraEletrica
-check semProfissionaisOnipresentes
-check semPinturaDuranteAlvenaria
-check semPinturaDuranteObraEletrica
-check distribuicaoLimpeza
-check pinturaRequereLimpeza
-check obraEletricaRequereAlvenaria
-check semDecoracaoDuranteConstrucaoCivil
+check semProfissionaisOnipresentes for 61
+check maximoAuxiliaresPorCasa for 61
+check separarPedreirosPintores for 61
+check unirPintoresAuxiliares for 61
+check separarEletricistasPintores for 61
+check unirEletricistasPedreiros for 61
+check separarDecoradoresPedreiros for 61
+check separarDecoradoresPintores for 61
+check separarDecoradoresEletricistas for 61
+check unirFiscaisEquipeInterna for 61
 
--- Run
+
+-- Show
 
 run show for 61
