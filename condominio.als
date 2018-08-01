@@ -109,7 +109,7 @@ fun getEletricistas [c: Casa] : set Eletricista {
     Eletricista & c.profissionais
 }
 
-fun getEquipeInterna [c: Casa] : set Eletricista {
+fun getEquipeInterna [c: Casa] : set EquipeInterna {
     EquipeInterna & c.profissionais
 }
 
